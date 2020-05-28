@@ -313,7 +313,7 @@ void printArgs() {
     cout << "f/F\tto place a flag," << endl;
     cout << "r/R\tto remove a flag," << endl;
     cout << "w/W\tto win the game," << endl;
-    cout << "h/H\tto display arguments again, and" << endl;
+    cout << "h/H\tto just display arguments again, and" << endl;
     cout << "q/Q\tto quit." << endl;
 }
 
@@ -345,7 +345,7 @@ int main() {
 
             printArgs();
 
-            cout << "\nFor example, to flag (15, 7), type: \"15 7 f\"." << endl;
+            cout << "\nFor example, to flag the 7th tile on the 15th row, type: \"15 7 f\"." << endl;
             first = false;
         }
         else if (errorLast) {
@@ -363,7 +363,7 @@ int main() {
 
         int n, m;
         char f;
-        cout << "\nTarget coords and args: ";
+        cout << "\nrow col arg: ";
         cin >> n >> m >> f;
         
         if (n >= h || m >= w) {
