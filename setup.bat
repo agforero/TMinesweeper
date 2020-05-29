@@ -1,0 +1,1 @@
+g++ -o mine minesweeper.cpp
