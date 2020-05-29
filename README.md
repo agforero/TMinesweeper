@@ -7,7 +7,7 @@ This program requires the use of `g++`:
 * On MacOS, instructions can be found [here](http://www.edparrish.net/common/macgpp.php), or [here](https://www.youtube.com/watch?v=1E_kBSka_ec) if you prefer video format.
 
 To compile: 
-* On UNIX and MacOS systems, run `make mine` to compile. Then, run `./mine` to execute. (You can run `make --version` to check for the presence of `make` in your system.)
+* On UNIX and MacOS systems, run `make mine` to compile. Then, run `./mine` to execute. You can run `make --version` to check for the presence of `make` in your system.
 * On Windows, either run `setup.bat`, or from a PowerShell `cd`'d into the directory, run `./setup`.
 
 Instructions on how to play provided in the executable. 
