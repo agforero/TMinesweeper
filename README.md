@@ -8,7 +8,7 @@ This program requires the use of `g++`:
 
 To compile: 
 * On UNIX and MacOS systems, run `make mine` to compile. Then, run `./mine` to execute. (You can run `make --version` to check for the presence of `make` in your system.)
-* On Windows, either run `setup.bat`, or from a PowerShell `cd`'d into the directory, run `./setup.bat`.
+* On Windows, either run `setup.bat`, or from a PowerShell `cd`'d into the directory, run `./setup`.
 
 Instructions on how to play provided in the executable. 
 
