@@ -1,7 +1,7 @@
 # TMinesweeper
 Terminal-based Minesweeper program, written in C++.
 
-This program requires the use of `g++`: 
+This program requires the use of the `g++` compiler: 
 * On UNIX systems, run `g++ --version` to check for `g++`'s presence.
 * On Windows systems, instructions can be found [here](https://www3.cs.stonybrook.edu/~alee/g++/g++.html), or [here](https://www.youtube.com/watch?v=lqzuR2USKRM) if you prefer video format.
 * On MacOS, instructions can be found [here](http://www.edparrish.net/common/macgpp.php), or [here](https://www.youtube.com/watch?v=1E_kBSka_ec) if you prefer video format.
