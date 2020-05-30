@@ -482,6 +482,7 @@ int main(int argc, char *argv[]) {
 
         if (first) { 
             cout << "\nThe board has " << p << " mines on it." << endl;
+            if (w > 50) cout << "Because your board is wider than 50, the formatting is more compact. The top row of numbers is tens." << endl;
             cout << "Enter your target coordinates, followed by arg, all separated by spaces." << endl;
 
             printArgs();
