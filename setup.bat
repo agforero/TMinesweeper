@@ -1,2 +1,2 @@
-g++ -c minesweeper.cpp
-g++ -o -std=c++11 mine minesweeper.o
+g++ -c -std=c++11 minesweeper.cpp
+g++ -o mine minesweeper.o
