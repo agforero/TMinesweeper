@@ -252,7 +252,7 @@ Board::~Board() {
 bool Board::isDone() {
     for (int i = 0; i < h; i++) {
         for (int j = 0; j < w; j++) {
-            if (!bd[i][j].isFound() || !bd[i][j].isFlagged()) return false;
+            if (!bd[i][j].isFound() && !bd[i][j].isFlagged()) return false; // we aren't done until all tiles are discovered, or flagged.
         }
     }
     return true;
