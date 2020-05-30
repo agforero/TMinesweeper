@@ -526,7 +526,7 @@ int main(int argc, char *argv[]) {
             errorLast = true;
         }
         else if (f == '.') {
-            if (b.getBoard()[n][m].isFlagged()) flagError = true; // since it only seems to work sometimes.
+            if (b.getBoard()[n][m].isFlagged()) invalidReveal = true; // since it only seems to work sometimes.
             else if (b.reveal(n, m) == 1) invalidReveal = true;
             else if (b.isBomb(n, m)) lost = true;
         }
