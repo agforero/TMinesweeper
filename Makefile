@@ -1,3 +1,3 @@
 mine:
-	g++ -o mine minesweeper.o
-	# run ./mine to execute the program. requires g++.
+	g++ -c minesweeper.cpp
+	g++ -o -std=c++11 mine minesweeper.o
