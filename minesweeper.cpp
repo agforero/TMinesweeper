@@ -31,6 +31,7 @@ public:
     bool isFound();
     int getVNum();
     Val getVal();
+    bool isFlagged();
 
     // functionality
     void setVal(Val);
@@ -89,6 +90,10 @@ Val Tile::getVal() {
     return val;
 }
 
+bool Tile::isFlagged() {
+    return flagged;
+}
+
 // functionality
 void Tile::setVal(Val v) {
     val = v;
@@ -131,16 +136,17 @@ public:
     void setAdjacent(int, int);
     Board(int, int, int);
     ~Board();
+    int flags;
 
     // gets
     bool isDone();
     bool isBomb(int, int);
 
     // functionality
-    void reveal(int, int);
+    int reveal(int, int);
     void revealAll();
     int flagTile(int, int);
-    void unFlagTile(int, int);
+    int unFlagTile(int, int);
 
     // prints
     void printBoard();
@@ -198,13 +204,11 @@ void Board::setAdjacent(int n, int m) { // another helper function
 Board::Board(int n, int m, int p) {
     h = n;
     w = m;
+    flags = p;
 
-    int teddy = 0;
-    for (int i = 0; i < p; i++) { // p% of tiles set to be randomly placed mines
+    for (int i = 0; i < p; i++) { // p tiles set to be randomly placed mines
         spots.push_back(rand()%(n*m)); 
-        teddy++;
     }
-    cout << teddy << " mines placed." << endl;
     int count = 0;
 
     for (int i = 0; i < h; i++) {
@@ -253,18 +257,23 @@ bool Board::isBomb(int n, int m) {
 }
 
 // functionality
-void Board::reveal(int n, int m) {
-    if (bd[n][m].getVal() != EMPTY) {
+int Board::reveal(int n, int m) {
+    if (bd[n][m].isFlagged()) {
+        return 1;
+    }
+    else if (bd[n][m].getVal() != EMPTY) {
         bd[n][m].find();
+        return 0;
     }
     else {
         bd[n][m].find();
         vector<vector<int>> adj = findAdjacent(n, m);
         for (auto s: adj) {
-            if (bd[s[0]][s[1]].getVal() != BOMB && !bd[s[0]][s[1]].isFound()) {
+            if (bd[s[0]][s[1]].getVal() != BOMB && !bd[s[0]][s[1]].isFound() && !bd[s[0]][s[1]].isFlagged()) {
                 reveal(s[0],s[1]); // cursed(?) I guess not.
             }
         }
+        return 0;
     }
 }
 
@@ -280,12 +289,21 @@ int Board::flagTile(int n, int m) {
     if (bd[n][m].getVal() != BOMB && bd[n][m].isFound()) {
         return -1; // we're trying to flag a revealed empty tile
     }
+    else if (bd[n][m].isFlagged()) {
+        return -1; // we're trying to flag a tile that already has a flag
+    }
+    flags--;
     bd[n][m].flag();
     return 0;
 }
 
-void Board::unFlagTile(int n, int m) {
+int Board::unFlagTile(int n, int m) {
+    if (!bd[n][m].isFlagged()) {
+        return -1; // we're trying to unflag a tile with no flag on it
+    }
+    flags++;
     bd[n][m].unFlag();
+    return 0;
 }
 
 // prints
@@ -343,7 +361,7 @@ int insAreOk(vector<string> inp) {
         if (stringToInt(inp[i]) > 60 && i != 2) { // if one of the dimensions exceeds 60
             return 1;
         } 
-        else if (inp[2].size() > 100) { // if the percentage exceeds 100
+        else if (stringToInt(inp[2]) > 100) { // if the percentage exceeds 100
             return 2;
         }
     }
@@ -390,17 +408,17 @@ int main(int argc, char *argv[]) {
     bool flagError = false;
     bool manualWin = false;
     bool lost = false;
+    bool invalidReveal = false;
     srand(time(NULL));
-    /*
-    NP; cout << "Enter height and width, separated by a space: ";
-    cin >> h >> w;
-    cout << "Enter mine placement percentage (0 for random): ";
-    */
+
     if (p == 0) p = rand() % 100;
     p = int((h*w)*(p*0.01));
+    if (p < 1) {
+        p = 1;
+    }
 
     Board b(h, w, p); 
-    int n, m;
+    int n, m, flags;
 
     while (!b.isDone()) {
         if (lost) break;
@@ -428,16 +446,23 @@ int main(int argc, char *argv[]) {
             cout << "\nAttempted to flag invalid tile." << endl;
             flagError = false;
         }
+        else if (invalidReveal) {
+            cout << "\nCannot reveal a flagged tile." << endl;
+            invalidReveal = false;
+        }
         
         char f;
-        cout << "\nrow col arg: ";
+
+        if (flags > 1) cout << "\nYou have " << b.flags << " flags remaining." << endl;
+        else cout << "\nYou have " << b.flags << " flag remaining." << endl;
+        cout << "row col arg: ";
         cin >> n >> m >> f;
         
         if (n >= h || m >= w) {
             errorLast = true;
         }
         else if (f == '.') {
-            b.reveal(n, m);
+            if (b.reveal(n, m) == 1) invalidReveal = true;
             if (b.isBomb(n, m)) lost = true;
         }
         else if (f == 'f' || f == 'F') {
