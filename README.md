@@ -10,7 +10,10 @@ To compile:
 * On UNIX and MacOS systems, run `make mine` to build the executable. 
 * On Windows, either run `setup.bat`, or from a PowerShell `cd`'d into the directory, run `./setup`.
 
-Then, run `./mine [height] [width] [placement-percentage]` in the directory it's installed in.
+Then, run `./mine h w p`, where
+* `h` is height,
+* `w` is width, and 
+* `p` is percentage of the board covered in mines.
 
 Instructions on how to play provided in the executable. 
 

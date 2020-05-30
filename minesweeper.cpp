@@ -2,7 +2,9 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
+#include <stdlib.h>
 #include <ctime>
+#include <limits>
 using namespace std;
 
 enum Val {EMPTY, IND, BOMB};
@@ -10,7 +12,8 @@ enum Val {EMPTY, IND, BOMB};
 int itest = 0;
 #define ITEST cout << "Test #" << itest++ << endl;
 #define NL cout << endl; // newline
-#define NP for (int i = 0; i < 100; i++) NL; // newpage; a little barbaric but it works
+#define NP system("CLS");
+//#define NP for (int i = 0; i < 100; i++) NL; // newpage; a little barbaric but it works
 
 // -------------------------------------------------------------------- TILE --------------------------------------------------------------------
 
@@ -141,6 +144,7 @@ public:
     // gets
     bool isDone();
     bool isBomb(int, int);
+    vector<vector<Tile>> getBoard();
 
     // functionality
     int reveal(int, int);
@@ -258,6 +262,10 @@ bool Board::isBomb(int n, int m) {
     return (bd[n][m].getVal() == BOMB);
 }
 
+vector<vector<Tile>> Board::getBoard() {
+    return bd;
+}
+
 // functionality
 int Board::reveal(int n, int m) {
     if (bd[n][m].isFlagged()) {
@@ -310,39 +318,84 @@ int Board::unFlagTile(int n, int m) {
 
 // prints
 void Board::printBoard() {
-    // lettering each column
-    cout << "\t";
-    for (int i = 0; i < w; i++) {
-        if (i < 10) cout << i << "  ";
-        else cout << i << " ";
-    } cout << endl << endl;
+    if (w < 51) {
+        // numbering each column
+        cout << "\t";
+        for (int i = 0; i < w; i++) {
+            if (i < 10) cout << i << "  ";
+            else cout << i << " ";
+        } cout << endl << endl;
 
-    // the rest of it
-    for (int i = 0; i < h; i++) {
-        cout << i << "\t";
-        for (int j = 0; j < w; j++) {
-            bd[i][j].printVal(); cout << "  ";
+        // the rows
+        for (int i = 0; i < h; i++) {
+            cout << i << "\t";
+            for (int j = 0; j < w; j++) {
+                bd[i][j].printVal(); cout << "  ";
+            }
+            cout << endl;
         }
-        cout << endl;
+    }
+    else {
+        // special numbering system
+        cout << "\t";
+        for (int i = 0; i < w; i++) {
+            if (!(i % 10)) cout << i/10 << " ";
+            else cout << "  ";
+        } cout << "\n\t";
+        for (int i = 0; i < w; i++) {
+            cout << i % 10 << " ";
+        } cout << endl << endl;
+
+        // the rows
+        for (int i = 0; i < h; i++) {
+            cout << i << "\t";
+            for (int j = 0; j < w; j++) {
+                bd[i][j].printVal(); cout << " ";
+            }
+            cout << endl;
+        }
     }
 }
 
 void Board::printBoardSpecial(int n, int m) {
-    // lettering each column
-    cout << "\t";
-    for (int i = 0; i < w; i++) {
-        if (i < 10) cout << i << "  ";
-        else cout << i << " ";
-    } cout << endl << endl;
+    if (w < 51) { // WIDTH NOT HEIGHT DUMMY
+        // numbering each column
+        cout << "\t";
+        for (int i = 0; i < w; i++) {
+            if (i < 10) cout << i << "  ";
+            else cout << i << " ";
+        } cout << endl << endl;
 
-    // the rest of it
-    for (int i = 0; i < h; i++) {
-        cout << i << "\t";
-        for (int j = 0; j < w; j++) {
-            if (bd[i][j].getVal() == BOMB) cout << "B  ";
-            else cout << "   ";
+        // the rest of it
+        for (int i = 0; i < h; i++) {
+            cout << i << "\t";
+            for (int j = 0; j < w; j++) {
+                if (bd[i][j].getVal() == BOMB) cout << "B  ";
+                else cout << "   ";
+            }
+            cout << endl;
         }
-        cout << endl;
+    }
+    else {
+        // special numbering system
+        cout << "\t";
+        for (int i = 0; i < w; i++) {
+            if (!(i % 10)) cout << i/10 << " ";
+            else cout << "  ";
+        } cout << "\n\t";
+        for (int i = 0; i < w; i++) {
+            cout << i % 10 << " ";
+        } cout << endl << endl;
+
+        // the rows
+        for (int i = 0; i < h; i++) {
+            cout << i << "\t";
+            for (int j = 0; j < w; j++) {
+                if (bd[i][j].getVal() == BOMB) cout << "B ";
+                else cout << "  ";
+            }
+            cout << endl;
+        }
     }
 }
 
@@ -360,10 +413,10 @@ int stringToInt(string s) {
 
 int insAreOk(vector<string> inp) {
     for (int i = 0; i < inp.size(); i++) {
-        if (stringToInt(inp[i]) > 60 && i != 2) { // if one of the dimensions exceeds 60
+        if (stringToInt(inp[i]) < 1 && i != 2) { // if one of the dimensions is less than 1
             return 1;
         } 
-        else if (stringToInt(inp[2]) > 100) { // if the percentage exceeds 100
+        else if (stringToInt(inp[2]) > 100 || stringToInt(inp[2]) < 1) { // if the percentage exceeds 100, or is less than 1
             return 2;
         }
     }
@@ -382,7 +435,7 @@ void printArgs() {
 
 int main(int argc, char *argv[]) {
     if (argc != 4) {
-        cout << "Usage: ./mine height width placement-percentage" << endl;
+        cout << "Usage: ./mine height width percent" << endl;
         return 1;
     }
 
@@ -392,11 +445,11 @@ int main(int argc, char *argv[]) {
     }
 
     if (insAreOk(inp) == 1) {
-        cout << "Maximum height or width exceeded. Enter no more than 60." << endl;
+        cout << "Invalid height or width. Cannot be less than 1." << endl;
         return 1;
     }
     else if (insAreOk(inp) == 2) {
-        cout << "Can't enter a percent higher than 100." << endl;
+        cout << "Invalid percentage." << endl;
         return 2;
     }
 
@@ -413,20 +466,20 @@ int main(int argc, char *argv[]) {
     bool invalidReveal = false;
     srand(time(NULL));
 
-    if (p == 0) p = rand() % 100;
     p = int((h*w)*(p*0.01));
     if (p < 1) {
         p = 1;
     }
 
     Board b(h, w, p); 
-    int n, m, flags;
+    int n, m;
 
     while (!b.isDone()) {
         if (lost || manualWin) break;
 
         NP;
         b.printBoard();
+
         if (first) { 
             cout << "\nThe board has " << p << " mines on it." << endl;
             cout << "Enter your target coordinates, followed by arg, all separated by spaces." << endl;
@@ -438,6 +491,8 @@ int main(int argc, char *argv[]) {
         }
         else if (errorLast) {
             cout << "\nInvalid argument(s), try again. " << endl;
+            cout << flush;
+            n = 0; m = 0;
             errorLast = false;
         }
         else if (showArgs) {
@@ -455,25 +510,34 @@ int main(int argc, char *argv[]) {
         
         char f;
 
-        if (flags > 1) cout << "\nYou have " << b.flags << " flags remaining." << endl;
+        if (b.flags != 1) cout << "\nYou have " << b.flags << " flags remaining." << endl;
         else cout << "\nYou have " << b.flags << " flag remaining." << endl;
         cout << "row col arg: ";
-        cin >> n >> m >> f;
+
+        // checking for invalid input
+        while (!(cin >> n >> m >> f)) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            cout << "Invalid argument(s), try again. ";
+        }
         
         if (n >= h || m >= w) {
             errorLast = true;
         }
         else if (f == '.') {
-            if (b.reveal(n, m) == 1) invalidReveal = true;
-            if (b.isBomb(n, m)) lost = true;
+            if (b.getBoard()[n][m].isFlagged()) flagError = true; // since it only seems to work sometimes.
+            else if (b.reveal(n, m) == 1) invalidReveal = true;
+            else if (b.isBomb(n, m)) lost = true;
         }
         else if (f == 'f' || f == 'F') {
-            if (b.flagTile(n, m) == -1) flagError = true;
+            if (b.getBoard()[n][m].isFlagged()) flagError = true; // since it only seems to work sometimes.
+            else if (b.flagTile(n, m) == 1) flagError = true;
         }
         else if (f == 'r' || f == 'R') {
             b.unFlagTile(n, m);
         }
         else if (f == 'q' || f == 'Q') {
+            system("PAUSE");
             return 0;
         }
         else if (f == 'w' || f == 'W') {
@@ -489,18 +553,16 @@ int main(int argc, char *argv[]) {
     }
 
     if (lost) {
-        char temp;
         NP; b.printBoardSpecial(n,m);
-        cout << "\nYou lost! Type q to quit. ";
-        cin >> temp;
+        cout << "\nYou lost! ";
+        system("PAUSE");
         return 0;
     }
 
     // won
-    char temp;
     NP; b.printBoard();
-    cout << "\nYou win! Type q to quit. ";
-    cin >> temp;
+    cout << "\nYou win! ";
+    system("PAUSE");
 
     return 0;
 }
