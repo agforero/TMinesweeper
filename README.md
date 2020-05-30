@@ -14,4 +14,4 @@ Then, run `./mine` in the directory it's installed in, or run the executable.
 
 Instructions on how to play provided in the executable. 
 
-Icon created using assets from [toicon](https://www.toicon.com/)'s open icon repository.
+Icon created using asset from [toicon](https://www.toicon.com/)'s open icon repository.
