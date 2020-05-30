@@ -204,10 +204,12 @@ void Board::setAdjacent(int n, int m) { // another helper function
 Board::Board(int n, int m, int p) {
     h = n;
     w = m;
+
     flags = p;
 
     for (int i = 0; i < p; i++) { // p tiles set to be randomly placed mines
-        spots.push_back(rand()%(n*m)); 
+        //int spot = rand() % (n*m);
+        spots.push_back(rand() % (n*m));
     }
     int count = 0;
 
@@ -246,7 +248,7 @@ Board::~Board() {
 bool Board::isDone() {
     for (int i = 0; i < h; i++) {
         for (int j = 0; j < w; j++) {
-            if (!bd[i][j].isFound()) return false;
+            if (!bd[i][j].isFound() || !bd[i][j].isFlagged()) return false;
         }
     }
     return true;
@@ -421,7 +423,7 @@ int main(int argc, char *argv[]) {
     int n, m, flags;
 
     while (!b.isDone()) {
-        if (lost) break;
+        if (lost || manualWin) break;
 
         NP;
         b.printBoard();
@@ -486,18 +488,19 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    if (manualWin) {
-        char temp;
-        NL; b.printBoard();
-        cout << "\nType q to quit. ";
-        cin >> temp;
-    }
-    else if (lost) {
+    if (lost) {
         char temp;
         NP; b.printBoardSpecial(n,m);
         cout << "\nYou lost! Type q to quit. ";
         cin >> temp;
+        return 0;
     }
+
+    // won
+    char temp;
+    NP; b.printBoard();
+    cout << "\nYou win! Type q to quit. ";
+    cin >> temp;
 
     return 0;
 }
