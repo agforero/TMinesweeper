@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 #include <cstdlib>
 #include <ctime>
 using namespace std;
@@ -143,6 +144,7 @@ public:
 
     // prints
     void printBoard();
+    void printBoardSpecial(int, int);
 };
 
 // constructors
@@ -198,7 +200,7 @@ Board::Board(int n, int m, int p) {
     w = m;
 
     int teddy = 0;
-    for (int i = 0; i < int((n*m)*(p*0.01)); i++) { // p% of tiles set to be randomly placed mines
+    for (int i = 0; i < p; i++) { // p% of tiles set to be randomly placed mines
         spots.push_back(rand()%(n*m)); 
         teddy++;
     }
@@ -305,7 +307,48 @@ void Board::printBoard() {
     }
 }
 
+void Board::printBoardSpecial(int n, int m) {
+    // lettering each column
+    cout << "\t";
+    for (int i = 0; i < w; i++) {
+        if (i < 10) cout << i << "  ";
+        else cout << i << " ";
+    } cout << endl << endl;
+
+    // the rest of it
+    for (int i = 0; i < h; i++) {
+        cout << i << "\t";
+        for (int j = 0; j < w; j++) {
+            if (bd[i][j].getVal() == BOMB) cout << "B  ";
+            else cout << "   ";
+        }
+        cout << endl;
+    }
+}
+
 // -------------------------------------------------------------------- MAIN --------------------------------------------------------------------
+
+int stringToInt(string s) {
+    int ret = 0;
+    int m = 1;
+    for (int i = s.size()-1; i >= 0; i--) {
+        ret = ret + ((int)s[i]-48)*m;
+        m *= 10;
+    }
+    return ret;
+}
+
+int insAreOk(vector<string> inp) {
+    for (int i = 0; i < inp.size(); i++) {
+        if (stringToInt(inp[i]) > 60 && i != 2) { // if one of the dimensions exceeds 60
+            return 1;
+        } 
+        else if (inp[2].size() > 100) { // if the percentage exceeds 100
+            return 2;
+        }
+    }
+    return 0;
+}
 
 void printArgs() {
     cout << "\nAvailable args are:" << endl << endl;
@@ -317,8 +360,30 @@ void printArgs() {
     cout << "q/Q\tto quit." << endl;
 }
 
-int main() {
-    int h, w, p;
+int main(int argc, char *argv[]) {
+    if (argc != 4) {
+        cout << "Usage: ./mine height width placement-percentage" << endl;
+        return 1;
+    }
+
+    vector<string> inp;
+    for (int i = 1; i < argc; i++) {
+        inp.push_back(argv[i]);
+    }
+
+    if (insAreOk(inp) == 1) {
+        cout << "Maximum height or width exceeded. Enter no more than 60." << endl;
+        return 1;
+    }
+    else if (insAreOk(inp) == 2) {
+        cout << "Can't enter a percent higher than 100." << endl;
+        return 2;
+    }
+
+    int h = stringToInt(inp[0]);
+    int w = stringToInt(inp[1]);
+    int p = stringToInt(inp[2]);
+
     bool first = true;
     bool errorLast = false;
     bool showArgs = false;
@@ -326,13 +391,16 @@ int main() {
     bool manualWin = false;
     bool lost = false;
     srand(time(NULL));
-
+    /*
     NP; cout << "Enter height and width, separated by a space: ";
     cin >> h >> w;
     cout << "Enter mine placement percentage (0 for random): ";
-    cin >> p; if (p == 0) p = rand() % 100;
+    */
+    if (p == 0) p = rand() % 100;
+    p = int((h*w)*(p*0.01));
 
     Board b(h, w, p); 
+    int n, m;
 
     while (!b.isDone()) {
         if (lost) break;
@@ -340,12 +408,12 @@ int main() {
         NP;
         b.printBoard();
         if (first) { 
-            cout << "\nThe board has " << int((h*w)*(p*0.01)) << " mines on it." << endl;
+            cout << "\nThe board has " << p << " mines on it." << endl;
             cout << "Enter your target coordinates, followed by arg, all separated by spaces." << endl;
 
             printArgs();
 
-            cout << "\nFor example, to flag the 7th tile on the 15th row, type: \"15 7 f\"." << endl;
+            cout << "\nFor example, to flag the 7th tile in the 15th row, type: \"15 7 f\"." << endl;
             first = false;
         }
         else if (errorLast) {
@@ -360,8 +428,7 @@ int main() {
             cout << "\nAttempted to flag invalid tile." << endl;
             flagError = false;
         }
-
-        int n, m;
+        
         char f;
         cout << "\nrow col arg: ";
         cin >> n >> m >> f;
@@ -397,13 +464,13 @@ int main() {
     if (manualWin) {
         char temp;
         NL; b.printBoard();
-        cout << "\nEnter q to quit. ";
+        cout << "\nType q to quit. ";
         cin >> temp;
     }
     else if (lost) {
         char temp;
-        NL; b.printBoard();
-        cout << "\nYou lost! Enter q to quit. ";
+        NP; b.printBoardSpecial(n,m);
+        cout << "\nYou lost! Type q to quit. ";
         cin >> temp;
     }
 
