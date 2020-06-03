@@ -7,7 +7,7 @@ This program requires the use of the `g++` compiler:
 * On Windows systems, instructions can be found [here](https://www3.cs.stonybrook.edu/~alee/g++/g++.html), or [here](https://www.youtube.com/watch?v=lqzuR2USKRM) if you prefer video format.
 
 To compile: 
-* On UNIX and MacOS systems, run `make mine` to build the executable. 
+* On UNIX and MacOS systems, after `cd`ing into the directory, run `make` to build the executable. 
 * On Windows, either run `setup.bat`, or from a PowerShell `cd`'d into the directory, run `./setup`.
 
 Then, run `./mine h w p`, where
