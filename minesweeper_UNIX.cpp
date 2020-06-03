@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <ctime>
 #include <limits>
-#include <fstream>
 using namespace std;
 
 enum Val {EMPTY, IND, BOMB};

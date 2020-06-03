@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <ctime>
 #include <limits>
-#include <fstream>
 using namespace std;
 
 enum Val {EMPTY, IND, BOMB};
@@ -13,7 +12,7 @@ enum Val {EMPTY, IND, BOMB};
 int itest = 0;
 #define ITEST cout << "Test #" << itest++ << endl;
 #define NL cout << endl; // newline
-#define NP system("cls"); // the difference between windows and UNIX
+#define NP system("cls"); // the difference between Windows and UNIX
 
 // -------------------------------------------------------------------- TILE --------------------------------------------------------------------
 
