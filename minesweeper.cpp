@@ -12,8 +12,7 @@ enum Val {EMPTY, IND, BOMB};
 int itest = 0;
 #define ITEST cout << "Test #" << itest++ << endl;
 #define NL cout << endl; // newline
-#define NP system("CLS");
-//#define NP for (int i = 0; i < 100; i++) NL; // newpage; a little barbaric but it works
+#define NP system("clear");
 
 // -------------------------------------------------------------------- TILE --------------------------------------------------------------------
 
@@ -555,15 +554,13 @@ int main(int argc, char *argv[]) {
 
     if (lost) {
         NP; b.printBoardSpecial(n,m);
-        cout << "\nYou lost! ";
-        system("PAUSE");
+        cout << "\nYou lost!" << endl;
         return 0;
     }
 
     // won
     NP; b.printBoard();
-    cout << "\nYou win! ";
-    system("PAUSE");
+    cout << "\nYou win!" << endl;
 
     return 0;
 }
