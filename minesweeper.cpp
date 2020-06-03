@@ -158,7 +158,7 @@ public:
 };
 
 // constructors
-bool isIn(vector<int> v, int n) { // a helper function essential to the constructors
+bool isIn(vector<int> v, int n) { // a helper function essential to the constructor
     for (auto x: v) {
         if (n == x) return true;
     }
@@ -212,8 +212,8 @@ Board::Board(int n, int m, int p) {
     flags = p;
 
     for (int i = 0; i < p; i++) { // p tiles set to be randomly placed mines
-        //int spot = rand() % (n*m);
-        spots.push_back(rand() % (n*m));
+        int spot = rand() % (n*m); if (spot == (n*m)) spot--;
+        spots.push_back(spot);
     }
     int count = 0;
 
