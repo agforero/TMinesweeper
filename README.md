@@ -1,4 +1,5 @@
 # TMinesweeper
+
 Terminal-based Minesweeper program, written in C++.
 
 This program requires the use of the `g++` compiler: 
@@ -18,3 +19,5 @@ Then, run `./mine h w p`, where
 Instructions on how to play provided in the executable. 
 
 Icon created using asset from [toicon](https://www.toicon.com/)'s open icon repository.
+
+![logo](icon.png)
